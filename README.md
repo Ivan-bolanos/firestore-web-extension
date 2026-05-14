@@ -3,8 +3,11 @@
 > A lightweight Chrome/Firefox extension to extract and export Firestore document data directly from Firebase Console - no configuration required!
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/yourusername/firestore-web-extension)
+[![GitHub release](https://img.shields.io/github/v/release/Ivan-bolanos/firestore-web-extension)](https://github.com/Ivan-bolanos/firestore-web-extension/releases)
+[![CI](https://github.com/Ivan-bolanos/firestore-web-extension/workflows/CI/badge.svg)](https://github.com/Ivan-bolanos/firestore-web-extension/actions)
+[![Bundle Size](https://img.shields.io/badge/bundle%20size-7KB-brightgreen)](https://github.com/Ivan-bolanos/firestore-web-extension)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![GitHub stars](https://img.shields.io/github/stars/Ivan-bolanos/firestore-web-extension?style=social)](https://github.com/Ivan-bolanos/firestore-web-extension/stargazers)
 
 ## ✨ Features
 
@@ -23,7 +26,7 @@
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/firestore-web-extension.git
+   git clone https://github.com/Ivan-bolanos/firestore-web-extension.git
    cd firestore-web-extension
    ```
 
@@ -224,7 +227,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Ivan Bolaños**
 
-- GitHub: [@ivaanbola](https://github.com/ivaanbola)
+- GitHub: [@Ivan-bolanos](https://github.com/Ivan-bolanos)
+- Email: [Your Email] (optional)
 
 ## 🌟 Show Your Support
 
@@ -250,9 +254,9 @@ Give a ⭐️ if this project helped you!
 
 If you encounter any issues or have questions:
 
-- 🐛 [Report a bug](https://github.com/yourusername/firestore-web-extension/issues)
-- 💡 [Request a feature](https://github.com/yourusername/firestore-web-extension/issues)
-- 📖 [Read the docs](https://github.com/yourusername/firestore-web-extension/wiki)
+- 🐛 [Report a bug](https://github.com/Ivan-bolanos/firestore-web-extension/issues)
+- 💡 [Request a feature](https://github.com/Ivan-bolanos/firestore-web-extension/issues)
+- 📖 [Read the docs](https://github.com/Ivan-bolanos/firestore-web-extension)
 
 ---
 
