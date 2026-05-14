@@ -27,7 +27,8 @@ Please describe the tests that you ran to verify your changes.
 - [ ] Test B
 
 **Test Configuration**:
-- Browser(s): 
+
+- Browser(s):
 - OS:
 - Node version:
 

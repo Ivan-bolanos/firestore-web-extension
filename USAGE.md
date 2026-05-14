@@ -3,6 +3,7 @@
 ## Installation
 
 1. Build the extension:
+
    ```bash
    npm install
    npm run build
@@ -30,15 +31,18 @@ This extension extracts Firestore document data directly from the Firebase Conso
 ## Troubleshooting
 
 ### "No document data found"
+
 - Make sure you're on a Firestore document detail page
 - Try clicking the "Refresh" button
 - Check if the document has fields displayed in Firebase Console
 
 ### Extension shows "Loading document..."
+
 - Click the "Refresh" button to manually extract data
 - Make sure you're on the correct page in Firebase Console
 
 ### Content script error
+
 - Reload the Firebase Console page
 - Reload the extension in `chrome://extensions/`
 
@@ -52,6 +56,7 @@ This extension extracts Firestore document data directly from the Firebase Conso
 ## No Firebase Config Required!
 
 Unlike the previous version, this extension doesn't require any Firebase configuration file because:
+
 - It reads data directly from the DOM (what you see in Firebase Console)
 - You're already authenticated in Firebase Console
 - No direct API calls are made to Firebase

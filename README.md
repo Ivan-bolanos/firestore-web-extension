@@ -25,17 +25,20 @@
 ### From Source
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/Ivan-bolanos/firestore-web-extension.git
    cd firestore-web-extension
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Build the extension**
+
    ```bash
    npm run build
    ```
@@ -77,6 +80,7 @@ Unlike traditional Firestore tools that require API configuration, this extensio
 4. **No API Calls** - Uses what's already displayed on your screen
 
 This approach means:
+
 - ✅ No Firebase configuration needed
 - ✅ Works with any Firebase project you have access to
 - ✅ No separate authentication required
@@ -153,6 +157,7 @@ npm run test:coverage
 ### Test Coverage
 
 Current coverage:
+
 - **Statements**: 70%+
 - **Branches**: 70%+
 - **Functions**: 70%+

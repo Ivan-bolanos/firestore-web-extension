@@ -1,9 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: '[BUG] '
+title: "[BUG] "
 labels: bug
-assignees: ''
+assignees: ""
 ---
 
 ## 🐛 Bug Description
@@ -43,6 +43,7 @@ Add any other context about the problem here.
 ## 🔍 Console Logs
 
 If applicable, paste any error messages from:
+
 - Browser DevTools Console (F12)
 - Extension popup console (right-click icon → Inspect popup)
 
