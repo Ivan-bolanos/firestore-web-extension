@@ -3,6 +3,7 @@
 ## Setup
 
 1. Build the extension:
+
    ```bash
    npm run build
    ```
@@ -44,22 +45,24 @@
 ### Check Console Logs
 
 In the Firebase Console page (F12 → Console):
+
 ```javascript
 // Check if extension is loaded
-console.log('Extension loaded?', !!chrome.runtime.id);
+console.log("Extension loaded?", !!chrome.runtime.id);
 
 // Manually trigger extraction
-chrome.runtime.sendMessage({action: 'extractData'}, response => {
-    console.log('Response:', response);
+chrome.runtime.sendMessage({ action: "extractData" }, (response) => {
+  console.log("Response:", response);
 });
 ```
 
 ### Check Storage
 
 In popup console (right-click extension icon → Inspect popup):
+
 ```javascript
 chrome.storage.local.get(null, (data) => {
-    console.log('Storage:', data);
+  console.log("Storage:", data);
 });
 ```
 
@@ -97,6 +100,7 @@ If the automatic extraction doesn't work, you can inspect the Firebase Console D
 7. Update `contentScript.js` with the correct selectors
 
 Common Firebase Console structures:
+
 - `<tr class="mat-row">` - Material Design table rows
 - `<td class="mat-cell">` - Table cells
 - `<div class="field-name">` and `<div class="field-value">` - Field pairs

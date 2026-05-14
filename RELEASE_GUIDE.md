@@ -30,10 +30,12 @@ Add release notes:
 ## [1.0.0] - 2026-05-14
 
 ### Added
+
 - Feature A
 - Feature B
 
 ### Fixed
+
 - Bug X
 - Bug Y
 ```
@@ -88,6 +90,7 @@ Upload `firestore-web-extension-v1.0.0.zip` to the GitHub release.
 - **PATCH** (0.0.1): Bug fixes, backwards compatible
 
 Examples:
+
 - `1.0.0` → First stable release
 - `1.1.0` → Added export to CSV feature
 - `1.1.1` → Fixed CSV export bug
@@ -130,6 +133,7 @@ Examples:
 For critical bugs in production:
 
 1. Create hotfix branch from tag
+
    ```bash
    git checkout -b hotfix/v1.0.1 v1.0.0
    ```
@@ -139,6 +143,7 @@ For critical bugs in production:
 3. Update version to patch (1.0.1)
 
 4. Commit, tag, and release
+
    ```bash
    git commit -m "Fix critical bug X"
    git tag -a v1.0.1 -m "Hotfix: Fix critical bug X"

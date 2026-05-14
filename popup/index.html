@@ -1,82 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Firestore Viewer</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 0;
-      padding: 16px;
-      width: 400px;
-      max-height: 600px;
-      overflow-y: auto;
-    }
-    h1 {
-      font-size: 18px;
-      margin: 0 0 12px 0;
-      color: #202124;
-    }
-    .controls {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    button {
-      background: #1a73e8;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-    }
-    button:hover {
-      background: #1557b0;
-    }
-    button:active {
-      background: #0d47a1;
-    }
-    #copy-btn {
-      background: #34a853;
-      display: none;
-    }
-    #copy-btn:hover {
-      background: #2d8e47;
-    }
-    #status {
-      color: #5f6368;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-    pre {
-      background-color: #f8f9fa;
-      padding: 12px;
-      overflow-x: auto;
-      border-radius: 6px;
-      font-size: 12px;
-      line-height: 1.5;
-      border: 1px solid #e8eaed;
-      margin: 0;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-    pre:empty {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <h1>Firestore Document</h1>
-  <div class="controls">
-    <button id="refresh-btn">Refresh</button>
-    <button id="copy-btn">Copy JSON</button>
-  </div>
-  <p id="status">Loading document...</p>
-  <pre id="document-data"></pre>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firestore Viewer</title>
+    <style>
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        padding: 16px;
+        width: 400px;
+        max-height: 600px;
+        overflow-y: auto;
+      }
+      h1 {
+        font-size: 18px;
+        margin: 0 0 12px 0;
+        color: #202124;
+      }
+      .controls {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      button {
+        background: #1a73e8;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      button:hover {
+        background: #1557b0;
+      }
+      button:active {
+        background: #0d47a1;
+      }
+      #copy-btn {
+        background: #34a853;
+        display: none;
+      }
+      #copy-btn:hover {
+        background: #2d8e47;
+      }
+      #status {
+        color: #5f6368;
+        font-size: 14px;
+        margin-bottom: 12px;
+      }
+      pre {
+        background-color: #f8f9fa;
+        padding: 12px;
+        overflow-x: auto;
+        border-radius: 6px;
+        font-size: 12px;
+        line-height: 1.5;
+        border: 1px solid #e8eaed;
+        margin: 0;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      pre:empty {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Firestore Document</h1>
+    <div class="controls">
+      <button id="refresh-btn">Refresh</button>
+      <button id="copy-btn">Copy JSON</button>
+    </div>
+    <p id="status">Loading document...</p>
+    <pre id="document-data"></pre>
 
-  <script src="popup.js"></script>
-</body>
+    <script src="popup.js"></script>
+  </body>
 </html>

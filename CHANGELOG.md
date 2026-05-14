@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2026-05-14
 
 ### Added
+
 - Initial release of Firestore Web Extension
 - DOM-based data extraction from Firebase Console
 - Support for all Firestore data types (string, number, boolean, null, map, array)
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full documentation (README, CONTRIBUTING, LICENSE)
 
 ### Technical Details
+
 - Manifest V3 compliance
 - Webpack-based build system
 - No Firebase SDK dependency (7KB total bundle size)
@@ -31,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modern ES6+ JavaScript
 
 ### Features
+
 - 🚀 Zero Configuration
 - 🔐 Uses Your Auth
 - 📦 Tiny Bundle (7KB)
@@ -43,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned Features
+
 - Export to CSV/Excel
 - Batch export multiple documents
 - Collection-level export

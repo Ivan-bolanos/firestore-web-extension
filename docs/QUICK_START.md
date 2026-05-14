@@ -53,28 +53,32 @@ npm run build
 ## 💡 Common Use Cases
 
 ### Export for Testing
+
 ```javascript
 // Copy document data
 // Paste into your test file
 const testData = {
-  "name": "John Doe",
-  "age": 30,
-  "email": "john@example.com"
+  name: "John Doe",
+  age: 30,
+  email: "john@example.com",
 };
 ```
 
 ### Debug Production Data
+
 1. Open production Firestore document
 2. Extract with extension
 3. Compare with expected values
 4. Identify data issues
 
 ### Quick Documentation
+
 1. Extract sample document
 2. Share JSON structure with team
 3. Use in API documentation
 
 ### Data Migration
+
 1. Extract documents from old structure
 2. Transform data format
 3. Import to new structure
@@ -82,16 +86,19 @@ const testData = {
 ## 🐛 Troubleshooting
 
 ### Extension icon doesn't appear
+
 - Make sure extension is installed and enabled
 - Check `chrome://extensions/` for errors
 - Reload the extension
 
 ### "No document data found"
+
 - Ensure you're on a document detail page (not collection list)
 - Click "Refresh" button manually
 - Check browser console for errors (F12)
 
 ### Data looks incorrect
+
 - Reload Firebase Console page
 - Reload extension
 - Check if document structure changed

@@ -12,22 +12,22 @@ This project and everyone participating in it is governed by our Code of Conduct
 
 Before creating bug reports, please check the existing issues as you might find that you don't need to create one. When you are creating a bug report, please include as many details as possible:
 
-* **Use a clear and descriptive title** for the issue
-* **Describe the exact steps to reproduce the problem**
-* **Provide specific examples** to demonstrate the steps
-* **Describe the behavior you observed** and what you expected to see
-* **Include screenshots** if possible
-* **Browser version** and operating system
-* **Extension version**
+- **Use a clear and descriptive title** for the issue
+- **Describe the exact steps to reproduce the problem**
+- **Provide specific examples** to demonstrate the steps
+- **Describe the behavior you observed** and what you expected to see
+- **Include screenshots** if possible
+- **Browser version** and operating system
+- **Extension version**
 
 ### Suggesting Enhancements
 
 Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion, please include:
 
-* **Use a clear and descriptive title**
-* **Provide a detailed description** of the suggested enhancement
-* **Provide specific examples** to demonstrate how it would work
-* **Explain why this enhancement would be useful**
+- **Use a clear and descriptive title**
+- **Provide a detailed description** of the suggested enhancement
+- **Provide specific examples** to demonstrate how it would work
+- **Explain why this enhancement would be useful**
 
 ### Pull Requests
 
@@ -65,41 +65,42 @@ npm run build
 
 ### JavaScript Style Guide
 
-* Use ES6+ features
-* Use meaningful variable names
-* Add comments for complex logic
-* Keep functions small and focused
-* Use async/await over Promise chains
+- Use ES6+ features
+- Use meaningful variable names
+- Add comments for complex logic
+- Keep functions small and focused
+- Use async/await over Promise chains
 
 ### Testing
 
-* Write tests for all new features
-* Maintain at least 70% code coverage
-* Use descriptive test names
-* Follow the Arrange-Act-Assert pattern
+- Write tests for all new features
+- Maintain at least 70% code coverage
+- Use descriptive test names
+- Follow the Arrange-Act-Assert pattern
 
 ```javascript
 // Good test example
-test('should parse string field correctly', () => {
-    // Arrange
-    const input = createMockElement('name', 'John', 'string');
-    
-    // Act
-    const result = parseDataTree(input);
-    
-    // Assert
-    expect(result).toEqual({ name: 'John' });
+test("should parse string field correctly", () => {
+  // Arrange
+  const input = createMockElement("name", "John", "string");
+
+  // Act
+  const result = parseDataTree(input);
+
+  // Assert
+  expect(result).toEqual({ name: "John" });
 });
 ```
 
 ### Commit Messages
 
-* Use the present tense ("Add feature" not "Added feature")
-* Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
-* Limit the first line to 72 characters or less
-* Reference issues and pull requests liberally after the first line
+- Use the present tense ("Add feature" not "Added feature")
+- Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
+- Limit the first line to 72 characters or less
+- Reference issues and pull requests liberally after the first line
 
 Examples:
+
 ```
 Add CSV export functionality
 
