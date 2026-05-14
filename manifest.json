@@ -1,0 +1,38 @@
+{
+    "manifest_version": 3,
+    "name": "Firestore Web Extension",
+    "version": "1.0.0",
+    "description": "A web extension to view Firestore documents as JSON",
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Firestore Viewer"
+    },
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "js": ["contentScript.js"],
+            "matches": ["https://console.firebase.google.com/*"],
+            "run_at": "document_idle",
+            "all_frames": false
+        }
+    ],
+    "permissions": [
+        "storage",
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://*.firebaseio.com/*",
+        "https://*.googleapis.com/*",
+        "https://console.firebase.google.com/*"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["*.js"],
+            "matches": ["https://console.firebase.google.com/*"]
+        }
+    ]
+}
