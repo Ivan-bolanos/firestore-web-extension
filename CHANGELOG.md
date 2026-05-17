@@ -5,43 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2026-05-14
+## [1.0.0] - 2026-05-17
 
-### Added
+### 🎉 Initial Release
 
-- Initial release of Firestore Web Extension
-- DOM-based data extraction from Firebase Console
-- Support for all Firestore data types (string, number, boolean, null, map, array)
-- Nested object and array parsing
-- One-click refresh to extract current document
-- Copy to clipboard functionality
-- Modern, clean UI with refresh and copy buttons
-- Zero configuration - uses existing Firebase Console authentication
-- Support for Chrome/Chromium, Edge, and Firefox browsers
-- Automatic detection of SPA navigation in Firebase Console
-- Comprehensive test suite with Jest
-- CI/CD pipeline with GitHub Actions
-- Full documentation (README, CONTRIBUTING, LICENSE)
+#### Added
+- ✨ Zero-configuration Firestore document extraction
+- 📋 One-click copy to clipboard functionality
+- 🌳 Full support for nested objects and arrays
+- 🔄 Live SPA navigation support for Firebase Console
+- 🎯 Parse all Firestore data types (string, number, boolean, map, array, null)
+- 💾 Temporary storage of extracted data
+- 🔄 Manual refresh capability
+- 🎨 Clean and intuitive popup UI
 
-### Technical Details
+#### Technical
+- 🧪 92% test coverage with Jest
+- 📦 Webpack bundling (production-ready)
+- 🔍 ESLint + Prettier for code quality
+- 🚀 GitHub Actions CI/CD pipeline (Node.js 20.x and 22.x)
+- 📱 Manifest V3 compliance
+- 🌐 Support for Chrome, Edge, and Firefox
 
-- Manifest V3 compliance
-- Webpack-based build system
-- No Firebase SDK dependency (7KB total bundle size)
-- Content script with f7e-data-tree parser
-- Service worker background script
-- Modern ES6+ JavaScript
+#### Security & Privacy
+- 🔐 All processing happens locally
+- 🚫 No external servers or analytics
+- ✅ Minimal permissions (storage, activeTab, scripting)
+- 🔒 Only accesses Firebase Console pages
 
-### Features
-
-- 🚀 Zero Configuration
-- 🔐 Uses Your Auth
-- 📦 Tiny Bundle (7KB)
-- 🎯 One-Click Extract
-- 📋 Copy to Clipboard
-- 🌳 Nested Data Support
-- 🔄 Live Updates
-- 🎨 Clean UI
+### Notes
+- First stable release ready for Chrome Web Store
+- Fully tested on Node.js 20.x and 22.x
+- Bundle size: ~7KB total
 
 ## [Unreleased]
 
@@ -54,5 +49,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - History of extracted documents
 - Dark mode
 - Keyboard shortcuts
-- Firefox Add-ons store release
-- Chrome Web Store release
+
+[1.0.0]: https://github.com/Ivan-bolanos/firestore-web-extension/releases/tag/v1.0.0
