@@ -1,4 +1,4 @@
-class Popup {
+export class Popup {
   constructor() {
     this.init();
   }
@@ -126,5 +126,7 @@ class Popup {
   }
 }
 
-// Initialize popup when DOM is loaded
-document.addEventListener("DOMContentLoaded", () => new Popup());
+// Initialize popup when DOM is loaded (only in browser environment)
+if (typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", () => new Popup());
+}

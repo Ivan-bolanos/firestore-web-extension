@@ -1,7 +1,7 @@
 console.log("Firestore Web Extension: Content script loaded");
 
 // Extract Firestore document data from Firebase Console DOM
-function extractDocumentData() {
+export function extractDocumentData() {
   try {
     const documentUrl = window.location.href;
     console.log("Extracting data from:", documentUrl);
@@ -68,7 +68,7 @@ function extractDocumentData() {
 }
 
 // Recursively parse a f7e-data-tree element
-function parseDataTree(treeElement, targetObject) {
+export function parseDataTree(treeElement, targetObject) {
   // Get the key name
   const keyElement = treeElement.querySelector(".database-key");
   if (!keyElement) return;
@@ -148,29 +148,8 @@ function parseDataTree(treeElement, targetObject) {
   }
 }
 
-// Run on initial load with delay to let page render
-setTimeout(() => {
-  console.log("Running initial extraction");
-  extractDocumentData();
-}, 2000);
-
-// Watch for URL changes (SPA navigation)
-let lastUrl = location.href;
-const urlObserver = new MutationObserver(() => {
-  const currentUrl = location.href;
-  if (currentUrl !== lastUrl) {
-    console.log("URL changed from", lastUrl, "to", currentUrl);
-    lastUrl = currentUrl;
-    // Wait for page to render
-    setTimeout(extractDocumentData, 2000);
-  }
-});
-
-// Start observing
-urlObserver.observe(document.body, { subtree: true, childList: true });
-
-// Listen for messages from popup
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+// Message handler function
+export function handleContentMessage(request, sender, sendResponse) {
   console.log("Received message:", request);
 
   if (request.action === "extractData") {
@@ -178,4 +157,31 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse(result);
   }
   return true;
-});
+}
+
+// Initialize only in browser environment
+if (typeof window !== "undefined" && typeof chrome !== "undefined") {
+  // Run on initial load with delay to let page render
+  setTimeout(() => {
+    console.log("Running initial extraction");
+    extractDocumentData();
+  }, 2000);
+
+  // Watch for URL changes (SPA navigation)
+  let lastUrl = location.href;
+  const urlObserver = new MutationObserver(() => {
+    const currentUrl = location.href;
+    if (currentUrl !== lastUrl) {
+      console.log("URL changed from", lastUrl, "to", currentUrl);
+      lastUrl = currentUrl;
+      // Wait for page to render
+      setTimeout(extractDocumentData, 2000);
+    }
+  });
+
+  // Start observing
+  urlObserver.observe(document.body, { subtree: true, childList: true });
+
+  // Listen for messages from popup
+  chrome.runtime.onMessage.addListener(handleContentMessage);
+}
