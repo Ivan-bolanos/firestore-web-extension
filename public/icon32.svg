@@ -1,0 +1,33 @@
+<svg width="32" height="32" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bgGradient" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#1a1f36"/>
+        <stop offset="100%" stop-color="#0d1117"/>
+      </linearGradient>
+      <linearGradient id="flameGradient" x1="64" y1="18" x2="64" y2="74" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#FF9A00"/>
+        <stop offset="50%" stop-color="#FF6B00"/>
+        <stop offset="100%" stop-color="#FF4500"/>
+      </linearGradient>
+      <linearGradient id="innerFlameGradient" x1="64" y1="32" x2="64" y2="67" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#FFE066"/>
+        <stop offset="100%" stop-color="#FFAA00"/>
+      </linearGradient>
+      <linearGradient id="codeGradient" x1="16" y1="80" x2="112" y2="110" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#4FC3F7"/>
+        <stop offset="100%" stop-color="#00E676"/>
+      </linearGradient>
+      <linearGradient id="dotGradient" x1="52" y1="93" x2="80" y2="101" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#4FC3F7"/>
+        <stop offset="100%" stop-color="#00E676"/>
+      </linearGradient>
+    </defs>
+    <rect width="128" height="128" rx="22" fill="url(#bgGradient)"/>
+    <path d="M64 18C64 18 50 35 50 50C50 58.5 55 65 55 65C55 65 53 60 58 56C58 56 56 68 64 74C72 68 70 56 70 56C75 60 73 65 73 65C73 65 78 58.5 78 50C78 35 64 18 64 18Z" fill="url(#flameGradient)"/>
+    <path d="M64 32C64 32 57 44 57 53C57 58 60 62 60 62C60 62 59 58.5 62.5 56.5C62.5 56.5 61.5 64 64 67C66.5 64 65.5 56.5 65.5 56.5C69 58.5 68 62 68 62C68 62 71 58 71 53C71 44 64 32 64 32Z" fill="url(#innerFlameGradient)"/>
+    <text x="16" y="106" font-family="'Courier New', monospace" font-weight="700" font-size="28" fill="url(#codeGradient)">{</text>
+    <text x="92" y="106" font-family="'Courier New', monospace" font-weight="700" font-size="28" fill="url(#codeGradient)">}</text>
+    <circle cx="52" cy="97" r="4" fill="url(#dotGradient)"/>
+    <circle cx="64" cy="97" r="4" fill="url(#dotGradient)"/>
+    <circle cx="76" cy="97" r="4" fill="url(#dotGradient)"/>
+  </svg>

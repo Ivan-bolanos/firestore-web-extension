@@ -59,6 +59,7 @@ module.exports = (env, argv) => {
             noErrorOnMissing: true,
           },
           { from: "icons", to: "icons", noErrorOnMissing: true },
+          { from: "public/icon*.png", to: "[name][ext]" },
         ],
       }),
     ],
