@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🎉 Initial Release
 
 #### Added
+
 - ✨ Zero-configuration Firestore document extraction
 - 📋 One-click copy to clipboard functionality
 - 🌳 Full support for nested objects and arrays
@@ -20,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🎨 Clean and intuitive popup UI
 
 #### Technical
+
 - 🧪 92% test coverage with Jest
 - 📦 Webpack bundling (production-ready)
 - 🔍 ESLint + Prettier for code quality
@@ -28,12 +30,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 🌐 Support for Chrome, Edge, and Firefox
 
 #### Security & Privacy
+
 - 🔐 All processing happens locally
 - 🚫 No external servers or analytics
 - ✅ Minimal permissions (storage, activeTab, scripting)
 - 🔒 Only accesses Firebase Console pages
 
 ### Notes
+
 - First stable release ready for Chrome Web Store
 - Fully tested on Node.js 20.x and 22.x
 - Bundle size: ~7KB total
