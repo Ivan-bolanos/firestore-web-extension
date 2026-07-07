@@ -14,4 +14,3 @@ export function handleMessage(request, sender, sendResponse) {
 if (typeof chrome !== "undefined" && chrome.runtime) {
   chrome.runtime.onMessage.addListener(handleMessage);
 }
-
