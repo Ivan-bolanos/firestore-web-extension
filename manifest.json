@@ -5,15 +5,15 @@
   "description": "A web extension to view Firestore documents as JSON",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Firestore Viewer"
-  },
-  "background": {
-    "service_worker": "background.js",
-    "type": "module",
+    "default_title": "Firestore Viewer",
     "default_icon": {
       "16": "icon16.png",
       "32": "icon32.png"
     }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
