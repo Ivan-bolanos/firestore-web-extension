@@ -35,18 +35,22 @@ The Extension operates entirely locally in your browser:
 The Extension requests the following permissions, and here's why:
 
 ### `storage`
+
 - **Purpose:** To temporarily store extracted Firestore document data in your local browser storage
 - **Scope:** Data is stored only locally on your device and is never transmitted anywhere
 
 ### `activeTab`
+
 - **Purpose:** To access the current Firebase Console tab you're viewing
 - **Scope:** Only accesses the active tab when you click the Extension icon
 
 ### `scripting`
+
 - **Purpose:** To inject the content script that reads Firestore document data from the Firebase Console page
 - **Scope:** Only runs on Firebase Console pages (console.firebase.google.com)
 
 ### `host_permissions: console.firebase.google.com`
+
 - **Purpose:** To access Firebase Console pages where Firestore documents are displayed
 - **Scope:** The Extension only works on Firebase Console pages and has no access to any other websites
 
@@ -92,6 +96,7 @@ The Extension does not knowingly collect any information from anyone, including 
 We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last Updated" date. We encourage you to review this Privacy Policy periodically.
 
 If we make material changes to how we handle user data (for example, if we start collecting data in the future), we will notify users through:
+
 - An update to this Privacy Policy
 - A notification in the Extension's Chrome Web Store listing
 - A prominent notice in the Extension itself
@@ -106,6 +111,7 @@ If you have any questions or concerns about this Privacy Policy or the Extension
 ## Legal Compliance
 
 This Extension complies with:
+
 - General Data Protection Regulation (GDPR)
 - California Consumer Privacy Act (CCPA)
 - Chrome Web Store Developer Program Policies
