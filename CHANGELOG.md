@@ -42,6 +42,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fully tested on Node.js 20.x and 22.x
 - Bundle size: ~7KB total
 
+## [1.0.1] - 2026-08-18
+
+### Fixed
+
+- 🔐 Removed unused `scripting` permission, resolving Chrome Web Store removal for requesting an unused permission
+
 ## [Unreleased]
 
 ### Planned Features
@@ -54,4 +60,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dark mode
 - Keyboard shortcuts
 
+[1.0.1]: https://github.com/Ivan-bolanos/firestore-web-extension/releases/tag/v1.0.1
 [1.0.0]: https://github.com/Ivan-bolanos/firestore-web-extension/releases/tag/v1.0.0
