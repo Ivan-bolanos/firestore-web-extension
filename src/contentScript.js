@@ -172,6 +172,61 @@ function findToolbarContainer() {
   return document.querySelector(TOOLBAR_CONTAINER_SELECTOR);
 }
 
+// Find (if still attached to the current toolbar) or create the shared
+// button element used for both the loading state and the "Copy JSON" state,
+// so switching between them never produces a duplicate.
+function findOrCreateButton(toolbar) {
+  let button = document.getElementById(COPY_BUTTON_ID);
+  if (!button || !toolbar.contains(button)) {
+    button = document.createElement("button");
+    button.id = COPY_BUTTON_ID;
+    button.type = "button";
+    button.style.cssText =
+      "background:#34a853;color:#fff;border:none;border-radius:4px;" +
+      "padding:4px 10px;margin-right:8px;font-size:12px;cursor:pointer;";
+    button.addEventListener("mouseenter", () => {
+      if (!button.disabled) button.style.background = "#2d8e47";
+    });
+    button.addEventListener("mouseleave", () => {
+      if (!button.disabled) button.style.background = "#34a853";
+    });
+    toolbar.insertBefore(button, toolbar.firstChild);
+  }
+  return button;
+}
+
+// Show a disabled loading placeholder in the toolbar while extraction is
+// pending (extraction runs on a delay to let Firebase Console finish
+// rendering), so the button appears immediately instead of popping in only
+// once data is ready. Never throws: a missing toolbar is a silent no-op,
+// same as injectCopyButton.
+export function injectLoadingButton() {
+  const toolbar = findToolbarContainer();
+  if (!toolbar) return;
+
+  const button = findOrCreateButton(toolbar);
+  button.disabled = true;
+  button.style.cursor = "default";
+  button.style.opacity = "0.7";
+  button.textContent = "";
+  button.onclick = null;
+
+  const spinner = document.createElement("span");
+  spinner.style.cssText =
+    "display:inline-block;width:10px;height:10px;border-radius:50%;" +
+    "border:2px solid rgba(255,255,255,0.5);border-top-color:#fff;" +
+    "animation:firestore-ext-spin 0.6s linear infinite;";
+  button.appendChild(spinner);
+
+  if (!document.getElementById("firestore-ext-spin-keyframes")) {
+    const style = document.createElement("style");
+    style.id = "firestore-ext-spin-keyframes";
+    style.textContent =
+      "@keyframes firestore-ext-spin { to { transform: rotate(360deg); } }";
+    document.head.appendChild(style);
+  }
+}
+
 // Inject (or refresh) the inline "Copy JSON" button into the Firebase
 // Console document-panel toolbar, next to the kebab menu. Never throws:
 // Firebase Console's DOM is outside this project's control, so a missing
@@ -189,23 +244,10 @@ export function injectCopyButton(data) {
     return;
   }
 
-  let button = document.getElementById(COPY_BUTTON_ID);
-  if (!button || !toolbar.contains(button)) {
-    button = document.createElement("button");
-    button.id = COPY_BUTTON_ID;
-    button.type = "button";
-    button.style.cssText =
-      "background:#34a853;color:#fff;border:none;border-radius:4px;" +
-      "padding:4px 10px;margin-right:8px;font-size:12px;cursor:pointer;";
-    button.addEventListener("mouseenter", () => {
-      button.style.background = "#2d8e47";
-    });
-    button.addEventListener("mouseleave", () => {
-      button.style.background = "#34a853";
-    });
-    toolbar.insertBefore(button, toolbar.firstChild);
-  }
-
+  const button = findOrCreateButton(toolbar);
+  button.disabled = false;
+  button.style.cursor = "pointer";
+  button.style.opacity = "1";
   button.textContent = "Copy JSON";
 
   // Refresh the handler on every call so the button always copies the most
@@ -241,6 +283,7 @@ export function handleContentMessage(request, sender, sendResponse) {
 // Initialize only in browser environment
 if (typeof window !== "undefined" && typeof chrome !== "undefined") {
   // Run on initial load with delay to let page render
+  injectLoadingButton();
   setTimeout(() => {
     console.log("Running initial extraction");
     const result = extractDocumentData();
@@ -255,6 +298,7 @@ if (typeof window !== "undefined" && typeof chrome !== "undefined") {
       console.log("URL changed from", lastUrl, "to", currentUrl);
       lastUrl = currentUrl;
       // Wait for page to render
+      injectLoadingButton();
       setTimeout(() => {
         const result = extractDocumentData();
         if (result.data) injectCopyButton(result.data);

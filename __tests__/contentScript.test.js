@@ -7,6 +7,7 @@ import {
   extractDocumentData,
   handleContentMessage,
   injectCopyButton,
+  injectLoadingButton,
   COPY_BUTTON_ID,
 } from "../src/contentScript.js";
 
@@ -474,6 +475,60 @@ describe("Content Script - Data Extraction", () => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
         JSON.stringify({ name: "New" }, null, 2),
       );
+    });
+  });
+
+  describe("injectLoadingButton", () => {
+    function renderToolbar() {
+      document.body.innerHTML = `
+        <div class="panel-header">
+          <div class="left-container"></div>
+          <div class="right-container">
+            <button aria-label="actions for document" aria-haspopup="menu">
+              more_vert
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    test("shows a disabled loading button while extraction is pending", () => {
+      renderToolbar();
+
+      injectLoadingButton();
+
+      const button = document.getElementById(COPY_BUTTON_ID);
+      expect(button).not.toBeNull();
+      expect(button.disabled).toBe(true);
+      expect(button.closest(".right-container")).not.toBeNull();
+    });
+
+    test("does not create a duplicate button on repeated calls", () => {
+      renderToolbar();
+
+      injectLoadingButton();
+      injectLoadingButton();
+
+      expect(document.querySelectorAll(`#${COPY_BUTTON_ID}`).length).toBe(1);
+    });
+
+    test("no-ops without throwing when the toolbar is absent", () => {
+      document.body.innerHTML = "<div>No toolbar here</div>";
+
+      expect(() => injectLoadingButton()).not.toThrow();
+      expect(document.getElementById(COPY_BUTTON_ID)).toBeNull();
+    });
+
+    test("injectCopyButton replaces the loading button with an enabled Copy JSON button", () => {
+      renderToolbar();
+
+      injectLoadingButton();
+      injectCopyButton({ name: "Test" });
+
+      const button = document.getElementById(COPY_BUTTON_ID);
+      expect(document.querySelectorAll(`#${COPY_BUTTON_ID}`).length).toBe(1);
+      expect(button.disabled).toBe(false);
+      expect(button.textContent).toBe("Copy JSON");
     });
   });
 });
