@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # Firestore Web Extension - Release Preparation Script
-# This script helps prepare a new release
+# Bumps the version, builds, commits, tags, pushes, and publishes a
+# GitHub release using the matching CHANGELOG.md section as release notes.
+#
+# Usage: ./scripts/prepare-release.sh [version]
+#   version   e.g. 1.1.0 (no leading "v"). If omitted, you'll be prompted.
 
 set -e
 
@@ -9,16 +13,62 @@ echo "🔥 Firestore Web Extension - Release Preparation"
 echo "================================================"
 echo ""
 
-# Get version from package.json
+if ! command -v gh &> /dev/null; then
+    echo "❌ GitHub CLI (gh) is required but not installed. See https://cli.github.com/"
+    exit 1
+fi
+
+if ! gh auth status &> /dev/null; then
+    echo "❌ Not logged in to GitHub CLI. Run: gh auth login"
+    exit 1
+fi
+
+# Refuse to release from a dirty working tree: the version bump commit must
+# contain only the version bump, not whatever else happens to be staged.
+if [ -n "$(git status --porcelain)" ]; then
+    echo "❌ Working tree is not clean. Commit or stash your changes first."
+    git status --short
+    exit 1
+fi
+
 CURRENT_VERSION=$(node -p "require('./package.json').version")
 echo "📦 Current version: $CURRENT_VERSION"
 echo ""
 
-# Ask for new version
-read -p "Enter new version (e.g., 1.0.0): " NEW_VERSION
+NEW_VERSION="$1"
+if [ -z "$NEW_VERSION" ]; then
+    read -p "Enter new version (e.g., 1.0.0): " NEW_VERSION
+fi
 
 if [ -z "$NEW_VERSION" ]; then
     echo "❌ Version cannot be empty"
+    exit 1
+fi
+
+if ! [[ "$NEW_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "❌ Version must be in MAJOR.MINOR.PATCH form (e.g., 1.1.0), got: $NEW_VERSION"
+    exit 1
+fi
+
+if git rev-parse "v$NEW_VERSION" &> /dev/null; then
+    echo "❌ Tag v$NEW_VERSION already exists"
+    exit 1
+fi
+
+# Extract this version's section from CHANGELOG.md: everything between its
+# "## [x.y.z]" heading and the next "## [" heading (or end of file).
+RELEASE_NOTES=$(awk -v ver="$NEW_VERSION" '
+  /^## \[/ {
+    if (found) exit
+    if ($0 ~ ("^## \\[" ver "\\]")) { found=1; next }
+    next
+  }
+  found { print }
+' CHANGELOG.md)
+
+if [ -z "$(echo "$RELEASE_NOTES" | tr -d '[:space:]')" ]; then
+    echo "❌ No CHANGELOG.md section found for [$NEW_VERSION]."
+    echo "   Add a \"## [$NEW_VERSION] - YYYY-MM-DD\" section before releasing."
     exit 1
 fi
 
@@ -26,62 +76,68 @@ echo ""
 echo "🔍 Checking prerequisites..."
 echo ""
 
-# Run tests
 echo "▶ Running tests..."
 npm test
-if [ $? -ne 0 ]; then
-    echo "❌ Tests failed. Fix them before releasing."
-    exit 1
-fi
 echo "✅ Tests passed"
 echo ""
 
-# Run linter
 echo "▶ Running linter..."
 npm run lint || echo "⚠️  Linting issues detected (continuing anyway)"
 echo ""
 
-# Build
 echo "▶ Building extension..."
 npm run build
-if [ $? -ne 0 ]; then
-    echo "❌ Build failed"
-    exit 1
-fi
 echo "✅ Build successful"
 echo ""
 
-# Update version in package.json
 echo "▶ Updating package.json version to $NEW_VERSION..."
-npm version $NEW_VERSION --no-git-tag-version
+npm version "$NEW_VERSION" --no-git-tag-version
 echo "✅ package.json updated"
 echo ""
 
-# Update version in manifest.json
 echo "▶ Updating manifest.json version to $NEW_VERSION..."
 sed -i.bak "s/\"version\": \".*\"/\"version\": \"$NEW_VERSION\"/" manifest.json && rm manifest.json.bak
 echo "✅ manifest.json updated"
 echo ""
 
-# Create release package
 echo "▶ Creating release package..."
-cd dist
-zip -r ../firestore-web-extension-v$NEW_VERSION.zip . > /dev/null
-cd ..
-echo "✅ Release package created: firestore-web-extension-v$NEW_VERSION.zip"
+ZIP_NAME="firestore-web-extension-v$NEW_VERSION.zip"
+(cd dist && zip -r "../$ZIP_NAME" . > /dev/null)
+echo "✅ Release package created: $ZIP_NAME"
 echo ""
 
-# Summary
 echo "================================================"
-echo "✅ Release prepared successfully!"
+echo "📋 Release notes (from CHANGELOG.md):"
+echo "================================================"
+echo "$RELEASE_NOTES"
+echo "================================================"
 echo ""
-echo "📋 Next steps:"
-echo "1. Update CHANGELOG.md with version $NEW_VERSION changes"
-echo "2. Review changes: git diff"
-echo "3. Commit: git add . && git commit -m 'Release v$NEW_VERSION'"
-echo "4. Tag: git tag -a v$NEW_VERSION -m 'Release version $NEW_VERSION'"
-echo "5. Push: git push origin main && git push origin v$NEW_VERSION"
-echo "6. Create GitHub release and upload: firestore-web-extension-v$NEW_VERSION.zip"
+
+read -p "Commit, tag, push to origin/main, and publish this GitHub release? [y/N] " CONFIRM
+if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
+    echo "❌ Aborted. package.json/manifest.json were updated but not committed."
+    echo "   Run 'git checkout package.json package-lock.json manifest.json' to undo."
+    exit 1
+fi
+
+echo "▶ Committing version bump..."
+git add package.json package-lock.json manifest.json
+git commit -m "Release v$NEW_VERSION"
+
+echo "▶ Tagging v$NEW_VERSION..."
+git tag -a "v$NEW_VERSION" -m "Release version $NEW_VERSION"
+
+echo "▶ Pushing commit and tag..."
+git push origin HEAD
+git push origin "v$NEW_VERSION"
+
+echo "▶ Publishing GitHub release..."
+gh release create "v$NEW_VERSION" \
+    --title "v$NEW_VERSION" \
+    --notes "$RELEASE_NOTES" \
+    "$ZIP_NAME"
+
 echo ""
-echo "See RELEASE_GUIDE.md for detailed instructions"
+echo "================================================"
+echo "✅ Release v$NEW_VERSION published!"
 echo "================================================"
