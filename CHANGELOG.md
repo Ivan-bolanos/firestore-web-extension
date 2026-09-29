@@ -48,6 +48,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 🔐 Removed unused `scripting` permission, resolving Chrome Web Store removal for requesting an unused permission
 
+## [1.1.0] - 2026-09-29
+
+### Added
+
+- 📋 Inline "Copy JSON" button next to the kebab (⋮) menu in Firebase Console's document panel — copy the extracted document without opening the extension popup
+- ⏳ Loading indicator in the toolbar button while document extraction is in progress
+
+### Fixed
+
+- 🐛 Fixed duplicate/orphaned "Copy JSON" buttons appearing across Firebase Console's Panel view (root/collection/document panels) when navigating between collections
+
 ## [Unreleased]
 
 ### Planned Features
@@ -60,5 +71,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dark mode
 - Keyboard shortcuts
 
+[1.1.0]: https://github.com/Ivan-bolanos/firestore-web-extension/releases/tag/v1.1.0
 [1.0.1]: https://github.com/Ivan-bolanos/firestore-web-extension/releases/tag/v1.0.1
 [1.0.0]: https://github.com/Ivan-bolanos/firestore-web-extension/releases/tag/v1.0.0
