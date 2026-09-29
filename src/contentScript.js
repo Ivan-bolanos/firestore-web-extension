@@ -1,5 +1,16 @@
 console.log("Firestore Web Extension: Content script loaded");
 
+// Selector for the Firebase Console document-panel toolbar's kebab (⋮) menu
+// button — anchor for the inline "Copy JSON" button. Verified against a live
+// Firestore document on 2026-09-29. Firebase Console DOM is Angular Material
+// auto-generated and may change without notice; the aria-label is Firebase's
+// own semantic attribute, not an Angular-generated class, so it's the most
+// stable anchor available. Fallback: `.panel-header .right-container`.
+const TOOLBAR_BUTTON_SELECTOR = 'button[aria-label="actions for document"]';
+const TOOLBAR_CONTAINER_SELECTOR = ".panel-header .right-container";
+export const COPY_BUTTON_ID = "firestore-ext-copy-json-btn";
+let toolbarNotFoundWarned = false; // avoid console spam on views with no toolbar
+
 // Extract Firestore document data from Firebase Console DOM
 export function extractDocumentData() {
   try {
@@ -148,12 +159,80 @@ export function parseDataTree(treeElement, targetObject) {
   }
 }
 
+// Find the toolbar container (next to the kebab menu) that holds the inline
+// "Copy JSON" button, using the kebab button as the primary anchor since its
+// aria-label is Firebase's own semantic attribute rather than an
+// Angular-generated class.
+function findToolbarContainer() {
+  const kebabButton = document.querySelector(TOOLBAR_BUTTON_SELECTOR);
+  if (kebabButton) {
+    const container = kebabButton.closest(".right-container");
+    if (container) return container;
+  }
+  return document.querySelector(TOOLBAR_CONTAINER_SELECTOR);
+}
+
+// Inject (or refresh) the inline "Copy JSON" button into the Firebase
+// Console document-panel toolbar, next to the kebab menu. Never throws:
+// Firebase Console's DOM is outside this project's control, so a missing
+// toolbar is a normal, silent no-op rather than an error.
+export function injectCopyButton(data) {
+  const toolbar = findToolbarContainer();
+
+  if (!toolbar) {
+    if (!toolbarNotFoundWarned) {
+      console.warn(
+        "Firestore Web Extension: toolbar not found, skipping inline Copy JSON button",
+      );
+      toolbarNotFoundWarned = true;
+    }
+    return;
+  }
+
+  let button = document.getElementById(COPY_BUTTON_ID);
+  if (!button || !toolbar.contains(button)) {
+    button = document.createElement("button");
+    button.id = COPY_BUTTON_ID;
+    button.type = "button";
+    button.style.cssText =
+      "background:#34a853;color:#fff;border:none;border-radius:4px;" +
+      "padding:4px 10px;margin-right:8px;font-size:12px;cursor:pointer;";
+    button.addEventListener("mouseenter", () => {
+      button.style.background = "#2d8e47";
+    });
+    button.addEventListener("mouseleave", () => {
+      button.style.background = "#34a853";
+    });
+    toolbar.insertBefore(button, toolbar.firstChild);
+  }
+
+  button.textContent = "Copy JSON";
+
+  // Refresh the handler on every call so the button always copies the most
+  // recently extracted document, not a stale one from an earlier render.
+  button.onclick = () => {
+    navigator.clipboard
+      .writeText(JSON.stringify(data, null, 2))
+      .then(() => {
+        const originalText = button.textContent;
+        button.textContent = "Copied!";
+        setTimeout(() => {
+          button.textContent = originalText;
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error("Failed to copy:", error);
+      });
+  };
+}
+
 // Message handler function
 export function handleContentMessage(request, sender, sendResponse) {
   console.log("Received message:", request);
 
   if (request.action === "extractData") {
     const result = extractDocumentData();
+    if (result.data) injectCopyButton(result.data);
     sendResponse(result);
   }
   return true;
@@ -164,7 +243,8 @@ if (typeof window !== "undefined" && typeof chrome !== "undefined") {
   // Run on initial load with delay to let page render
   setTimeout(() => {
     console.log("Running initial extraction");
-    extractDocumentData();
+    const result = extractDocumentData();
+    if (result.data) injectCopyButton(result.data);
   }, 2000);
 
   // Watch for URL changes (SPA navigation)
@@ -175,7 +255,10 @@ if (typeof window !== "undefined" && typeof chrome !== "undefined") {
       console.log("URL changed from", lastUrl, "to", currentUrl);
       lastUrl = currentUrl;
       // Wait for page to render
-      setTimeout(extractDocumentData, 2000);
+      setTimeout(() => {
+        const result = extractDocumentData();
+        if (result.data) injectCopyButton(result.data);
+      }, 2000);
     }
   });
 

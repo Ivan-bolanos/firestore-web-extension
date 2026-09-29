@@ -6,6 +6,8 @@ import {
   parseDataTree,
   extractDocumentData,
   handleContentMessage,
+  injectCopyButton,
+  COPY_BUTTON_ID,
 } from "../src/contentScript.js";
 
 describe("Content Script - Data Extraction", () => {
@@ -355,6 +357,123 @@ describe("Content Script - Data Extraction", () => {
       invalidUrls.forEach((url) => {
         expect(url).not.toMatch(/\/firestore\/(data|databases)\//);
       });
+    });
+  });
+
+  describe("injectCopyButton", () => {
+    function renderToolbar() {
+      document.body.innerHTML = `
+        <div class="panel-header">
+          <div class="left-container"></div>
+          <div class="right-container">
+            <button aria-label="actions for document" aria-haspopup="menu">
+              more_vert
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    beforeEach(() => {
+      navigator.clipboard = { writeText: jest.fn().mockResolvedValue() };
+    });
+
+    test("creates the button when the toolbar is present", () => {
+      renderToolbar();
+
+      injectCopyButton({ name: "Test" });
+
+      const button = document.getElementById(COPY_BUTTON_ID);
+      expect(button).not.toBeNull();
+      expect(button.closest(".right-container")).not.toBeNull();
+    });
+
+    test("does not create a duplicate button on repeated calls", () => {
+      renderToolbar();
+
+      injectCopyButton({ name: "Test" });
+      injectCopyButton({ name: "Test" });
+
+      expect(document.querySelectorAll(`#${COPY_BUTTON_ID}`).length).toBe(1);
+    });
+
+    test("recreates the button when the existing one is detached from the toolbar", () => {
+      renderToolbar();
+      injectCopyButton({ name: "Test" });
+      const staleButton = document.getElementById(COPY_BUTTON_ID);
+
+      // Simulate Angular tearing down and rebuilding the toolbar node.
+      staleButton.remove();
+      document.body.querySelector(".right-container").appendChild(staleButton);
+      renderToolbar();
+
+      injectCopyButton({ name: "Test" });
+
+      const button = document.getElementById(COPY_BUTTON_ID);
+      expect(button).not.toBeNull();
+      expect(button.closest(".right-container")).not.toBeNull();
+      expect(document.querySelectorAll(`#${COPY_BUTTON_ID}`).length).toBe(1);
+    });
+
+    test("no-ops without throwing when the toolbar is absent, warning at most once", () => {
+      document.body.innerHTML = "<div>No toolbar here</div>";
+      const warnCallsBefore = console.warn.mock.calls.length;
+
+      expect(() => injectCopyButton({ name: "Test" })).not.toThrow();
+      expect(document.getElementById(COPY_BUTTON_ID)).toBeNull();
+
+      injectCopyButton({ name: "Test" });
+      injectCopyButton({ name: "Test" });
+
+      // The warn-once flag is module-scoped (persists across the content
+      // script's lifetime, not reset per call), so an earlier test in this
+      // file may have already tripped it — assert on the delta, not an
+      // absolute count.
+      expect(
+        console.warn.mock.calls.length - warnCallsBefore,
+      ).toBeLessThanOrEqual(1);
+    });
+
+    test("clicking the button copies the JSON data to the clipboard", async () => {
+      renderToolbar();
+      const data = { name: "Test User", age: 30 };
+
+      injectCopyButton(data);
+      document.getElementById(COPY_BUTTON_ID).click();
+
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+        JSON.stringify(data, null, 2),
+      );
+    });
+
+    test("shows 'Copied!' after click and reverts after 2000ms", async () => {
+      jest.useFakeTimers();
+      renderToolbar();
+      injectCopyButton({ name: "Test" });
+      const button = document.getElementById(COPY_BUTTON_ID);
+      const originalText = button.textContent;
+
+      button.click();
+      await Promise.resolve(); // flush the clipboard.writeText().then() microtask
+
+      expect(button.textContent).toBe("Copied!");
+
+      jest.advanceTimersByTime(2000);
+
+      expect(button.textContent).toBe(originalText);
+      jest.useRealTimers();
+    });
+
+    test("clicking the reused button after a refresh copies the latest data", () => {
+      renderToolbar();
+
+      injectCopyButton({ name: "Old" });
+      injectCopyButton({ name: "New" });
+      document.getElementById(COPY_BUTTON_ID).click();
+
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+        JSON.stringify({ name: "New" }, null, 2),
+      );
     });
   });
 });
