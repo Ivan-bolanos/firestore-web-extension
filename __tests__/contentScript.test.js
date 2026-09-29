@@ -531,4 +531,89 @@ describe("Content Script - Data Extraction", () => {
       expect(button.textContent).toBe("Copy JSON");
     });
   });
+
+  describe("multi-panel view (Panel view shows root/collection/document side by side)", () => {
+    // Firebase's "Panel view" renders several .panel-header elements at
+    // once (root, collection, document), each with its own
+    // .right-container, but only the document panel has the kebab menu.
+    function renderPanelView() {
+      document.body.innerHTML = `
+        <div class="panel-header">
+          <span class="label">(default)</span>
+          <div class="right-container"></div>
+        </div>
+        <div class="panel-header">
+          <span class="label">notifications-prod</span>
+          <div class="right-container"></div>
+        </div>
+        <div class="panel-header">
+          <span class="label">01n7IvXIZSfVH1vYwL6yQgq1h973</span>
+          <div class="right-container">
+            <button aria-label="actions for document" aria-haspopup="menu">
+              more_vert
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    test("injects only into the document panel's toolbar, not the root/collection panels", () => {
+      renderPanelView();
+
+      injectCopyButton({ name: "Test" });
+
+      expect(document.querySelectorAll(`#${COPY_BUTTON_ID}`).length).toBe(1);
+      const kebab = document.querySelector(
+        'button[aria-label="actions for document"]',
+      );
+      expect(
+        kebab
+          .closest(".right-container")
+          .contains(document.getElementById(COPY_BUTTON_ID)),
+      ).toBe(true);
+    });
+
+    test("does not leave an orphaned button in the root/collection panel when the kebab briefly disappears during navigation", () => {
+      // The root and collection panels persist across navigation; only the
+      // document panel's content (including its kebab button) is torn down
+      // and rebuilt by Angular, with a brief window where the kebab is gone.
+      renderPanelView();
+      const documentPanelToolbar = document
+        .querySelector('button[aria-label="actions for document"]')
+        .closest(".right-container");
+
+      // Mid-navigation: kebab is briefly absent, but the root/collection
+      // panels (and their empty .right-container elements) are still there.
+      documentPanelToolbar.innerHTML = "";
+      injectLoadingButton();
+
+      // Kebab reappears once the new document panel finishes rendering.
+      const kebab = document.createElement("button");
+      kebab.setAttribute("aria-label", "actions for document");
+      documentPanelToolbar.appendChild(kebab);
+      injectCopyButton({ name: "Test" });
+
+      expect(document.querySelectorAll(`#${COPY_BUTTON_ID}`).length).toBe(1);
+      expect(
+        documentPanelToolbar.contains(document.getElementById(COPY_BUTTON_ID)),
+      ).toBe(true);
+    });
+
+    test("does not inject anywhere when the document panel's kebab is not yet rendered", () => {
+      document.body.innerHTML = `
+        <div class="panel-header">
+          <span class="label">(default)</span>
+          <div class="right-container"></div>
+        </div>
+        <div class="panel-header">
+          <span class="label">notifications-prod</span>
+          <div class="right-container"></div>
+        </div>
+      `;
+
+      injectCopyButton({ name: "Test" });
+
+      expect(document.getElementById(COPY_BUTTON_ID)).toBeNull();
+    });
+  });
 });

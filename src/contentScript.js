@@ -5,9 +5,16 @@ console.log("Firestore Web Extension: Content script loaded");
 // Firestore document on 2026-09-29. Firebase Console DOM is Angular Material
 // auto-generated and may change without notice; the aria-label is Firebase's
 // own semantic attribute, not an Angular-generated class, so it's the most
-// stable anchor available. Fallback: `.panel-header .right-container`.
+// stable anchor available.
+//
+// No structural fallback (e.g. `.panel-header .right-container`) is used:
+// Firebase's "Panel view" renders several `.panel-header` panels at once
+// (root, collection, document), each with its own `.right-container`, but
+// only the document panel has this kebab button. A structural fallback
+// would resolve ambiguously to the wrong panel whenever the document
+// panel's kebab is briefly absent (e.g. mid-navigation, while Angular
+// rebuilds that panel) but the other panels are still present.
 const TOOLBAR_BUTTON_SELECTOR = 'button[aria-label="actions for document"]';
-const TOOLBAR_CONTAINER_SELECTOR = ".panel-header .right-container";
 export const COPY_BUTTON_ID = "firestore-ext-copy-json-btn";
 let toolbarNotFoundWarned = false; // avoid console spam on views with no toolbar
 
@@ -159,23 +166,27 @@ export function parseDataTree(treeElement, targetObject) {
   }
 }
 
-// Find the toolbar container (next to the kebab menu) that holds the inline
-// "Copy JSON" button, using the kebab button as the primary anchor since its
-// aria-label is Firebase's own semantic attribute rather than an
-// Angular-generated class.
+// Find the document panel's toolbar container (next to its kebab menu) that
+// holds the inline "Copy JSON" button. Only the document panel's kebab is a
+// valid anchor — see the comment on TOOLBAR_BUTTON_SELECTOR for why there is
+// no structural fallback.
 function findToolbarContainer() {
   const kebabButton = document.querySelector(TOOLBAR_BUTTON_SELECTOR);
-  if (kebabButton) {
-    const container = kebabButton.closest(".right-container");
-    if (container) return container;
-  }
-  return document.querySelector(TOOLBAR_CONTAINER_SELECTOR);
+  return kebabButton ? kebabButton.closest(".right-container") : null;
 }
 
 // Find (if still attached to the current toolbar) or create the shared
 // button element used for both the loading state and the "Copy JSON" state,
-// so switching between them never produces a duplicate.
+// so switching between them never produces a duplicate. Also removes any
+// copy of the button left behind in a different panel — Firebase's "Panel
+// view" keeps root/collection panels mounted while only the document
+// panel's content is torn down and rebuilt during navigation, which can
+// otherwise orphan a button there from an earlier render.
 function findOrCreateButton(toolbar) {
+  document.querySelectorAll(`#${COPY_BUTTON_ID}`).forEach((existing) => {
+    if (!toolbar.contains(existing)) existing.remove();
+  });
+
   let button = document.getElementById(COPY_BUTTON_ID);
   if (!button || !toolbar.contains(button)) {
     button = document.createElement("button");
